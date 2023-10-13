@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: This CloudFormation template is used to cover the example of OnStackFailure parameter. 
+
+Parameters:
+
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t3.small
+    AllowedValues: [t3.micro, t3.small, t3.medium]
+    ConstraintDescription: must be a valid EC2 instance type. 
+  
+  MyVPC: 
+    Description: VPC ID for Ec2 Instance and security group.
+    Type: String
+  
+  MySubnet: 
+    Description: Subnet in which the instance would be created.
+    Type: String
+
+  IngressIp:
+    Description: The IP address range that can access the Ec2 instance on port 80.
+    Type: String
+    MinLength: 9
+    MaxLength: 18
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+
+  EgressIp:
+    Description: The IP address range that the Ec2 instance send traffic to on port 443.
+    Type: String
+    MinLength: 9
+    MaxLength: 18
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+
+
+Resources:
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Delete
+    Properties: 
+      InstanceType: !Ref 'InstanceType'
+      SecurityGroupIds: 
+        - !Ref 'InstanceSecurityGroups'
+      ImageId: 'ami-sjdksk'
+      SubnetId: !Ref MySubnet 
+
+  InstanceSecurityGroups:
+    Type: AWS::EC2::SecurityGroup
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Retain
+    Properties:
+      GroupDescription: Allows incoming traffic on port 80 and outgoing traffic on port 443. 
+      VpcId: !Ref MyVPC  # Specify the VPC ID for the security group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Ref 'IngressIp'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443        
+          CidrIp: !Ref 'EgressIp'
