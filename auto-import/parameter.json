@@ -1,0 +1,13 @@
+[
+    {
+      "ParameterKey": "DynamoDBTableName",
+      "ParameterValue": "serverlessTabe",
+      "UsePreviousValue": false
+    },
+    {
+      "ParameterKey": "S3BucketName",
+      "ParameterValue": "{S3 Bucket you have created}",
+      "UsePreviousValue": false
+    }
+
+  ]

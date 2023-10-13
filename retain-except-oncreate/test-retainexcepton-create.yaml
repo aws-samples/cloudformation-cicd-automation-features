@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: This CloudFormation template is used to cover the example of OnStackFailure parameter. 
+
+Parameters:
+
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t3.small
+    AllowedValues: [t3.micro, t3.small, t3.medium]
+    ConstraintDescription: must be a valid EC2 instance type. 
+  
+  MyVPC: 
+    Description: VPC ID for Ec2 Instance and security group.
+    Type: String
+  
+  MySubnet: 
+    Description: Subnet in which the instance would be created.
+    Type: String
+
+  MyALBSubnetPublicSubnet1: 
+    Description: List of subnets for ALB
+    Type: String
+
+  MyALBSubnetPublicSubnet2: 
+    Description: List of subnets for ALB
+    Type: String
+
+  IngressIp:
+    Description: The IP address range that can access the Ec2 instance on port 80.
+    Type: String
+    MinLength: 9
+    MaxLength: 18
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+
+  EgressIp:
+    Description: The IP address range that the Ec2 instance send traffic to on port 443.
+    Type: String
+    MinLength: 9
+    MaxLength: 18
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+
+
+Resources:
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Delete
+    Properties: 
+      InstanceType: !Ref 'InstanceType'
+      SecurityGroupIds: 
+        - !Ref 'InstanceSecurityGroups'
+      ImageId: 'ami-07d07d65c47e5aa90'
+      SubnetId: !Ref MySubnet 
+
+  InstanceSecurityGroups:
+    Type: AWS::EC2::SecurityGroup
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Retain
+    Properties:
+      GroupDescription: Allows incoming traffic on port 80 and outgoing traffic on port 443. 
+      VpcId: !Ref MyVPC  # Specify the VPC ID for the security group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Ref 'IngressIp'
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443        
+          CidrIp: !Ref 'EgressIp'
+
+### adding ALB to the template ####
+
+  MyLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Delete
+    Properties:
+      Subnets:
+        - !Ref MyALBSubnetPublicSubnet1
+        - !Ref MyALBSubnetPublicSubnet2
+      SecurityGroups:
+        - !GetAtt InstanceSecurityGroups.GroupId
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: access_logs.s3.enabled
+          Value: true
+      Tags:
+        - Key: Name
+          Value: MyLoadBalancer
+  
+  MyTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Delete
+    Properties:
+      Name: my-target-group
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref MyVPC
+      TargetType: instance
+      Targets:
+        - Id: !Ref EC2Instance
+
+  MyListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: RetainExceptOnCreate
+    Properties:
+      LoadBalancerArn: !Ref MyLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          ForwardConfig: 
+            TargetGroups: 
+              - TargetGroupArn: !Ref MyTargetGroup

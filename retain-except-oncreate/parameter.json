@@ -1,0 +1,39 @@
+[
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t3.small",
+    "UsePreviousValue": false
+  },
+  {
+      "ParameterKey": "IngressIp",
+      "ParameterValue": "192.168.10.0/24",
+      "UsePreviousValue": false
+  },
+  {
+    "ParameterKey": "EgressIp",
+    "ParameterValue": "192.168.10.0/24",
+    "UsePreviousValue": false
+  },
+  {
+    "ParameterKey": "MyVPC",
+    "ParameterValue": "{Your-VPC}",
+    "UsePreviousValue": false
+  },
+  {
+    "ParameterKey": "MySubnet",
+    "ParameterValue": "{Your-subnet}",
+    "UsePreviousValue": false
+  },
+  {
+    "ParameterKey": "MyALBSubnetPublicSubnet1",
+    "ParameterValue": "{Your-subnet}",
+    "UsePreviousValue": false
+  },
+  {
+    "ParameterKey": "MyALBSubnetPublicSubnet2",
+    "ParameterValue": "{Your-subnet}",
+    "UsePreviousValue": false
+  }
+
+
+]
