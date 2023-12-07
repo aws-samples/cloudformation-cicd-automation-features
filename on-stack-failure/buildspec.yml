@@ -24,11 +24,11 @@ phases:
           echo "Change set exists, waiting for it to be in state 'Create'"
           while true; do
             change_set_status=$(aws cloudformation describe-change-set --stack-name ${STACK_NAME} --change-set-name ${CHANGE_SET_NAME} | jq -r '.Status')
-            if [ "$change_set_status" == "CREATE_COMPLETE" ]; then
+            if [ "$change_set_status" = "CREATE_COMPLETE" ]; then
               echo "Change set is in state 'Create Complete', executing"
               aws cloudformation execute-change-set --stack-name ${STACK_NAME} --change-set-name ${CHANGE_SET_NAME}
               break
-            elif [ "$change_set_status" == "FAILED" ]; then
+            elif [ "$change_set_status" = "FAILED" ]; then
               echo "Change set creation failed, exiting"
               exit 1
             else
