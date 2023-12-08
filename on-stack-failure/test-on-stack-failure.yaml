@@ -48,7 +48,7 @@ Resources:
       InstanceType: !Ref 'InstanceType'
       SecurityGroupIds: 
         - !Ref 'InstanceSecurityGroups'
-      ImageId: 'ami-sjdksk'
+      ImageId: 'ami-1234'
       SubnetId: !Ref MySubnet 
 
   InstanceSecurityGroups:
