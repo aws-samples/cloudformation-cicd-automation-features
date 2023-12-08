@@ -19,11 +19,11 @@ Parameters:
     Description: Subnet in which the instance would be created.
     Type: String
 
-  MyALBSubnetPublicSubnet1: 
+  MyALBSubnetSubnet1: 
     Description: List of subnets for ALB
     Type: String
 
-  MyALBSubnetPublicSubnet2: 
+  MyALBSubnetSubnet2: 
     Description: List of subnets for ALB
     Type: String
 
@@ -85,8 +85,8 @@ Resources:
     UpdateReplacePolicy: Delete
     Properties:
       Subnets:
-        - !Ref MyALBSubnetPublicSubnet1
-        - !Ref MyALBSubnetPublicSubnet2
+        - !Ref MyALBSubnetSubnet1
+        - !Ref MyALBSubnetSubnet2
       SecurityGroups:
         - !GetAtt InstanceSecurityGroups.GroupId
       Scheme: internet-facing
@@ -104,7 +104,7 @@ Resources:
     Properties:
       Name: my-target-group
       Port: 80
-      Protocol: HTTP
+      Protocol: HTP
       VpcId: !Ref MyVPC
       TargetType: instance
       Targets:
