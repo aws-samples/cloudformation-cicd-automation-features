@@ -25,12 +25,12 @@
     "UsePreviousValue": false
   },
   {
-    "ParameterKey": "MyALBSubnetPublicSubnet1",
+    "ParameterKey": "MyALBSubnetSubnet1",
     "ParameterValue": "{Your-subnet}",
     "UsePreviousValue": false
   },
   {
-    "ParameterKey": "MyALBSubnetPublicSubnet2",
+    "ParameterKey": "MyALBSubnetSubnet2",
     "ParameterValue": "{Your-subnet}",
     "UsePreviousValue": false
   }
