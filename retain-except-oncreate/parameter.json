@@ -15,22 +15,22 @@
     "UsePreviousValue": false
   },
   {
-    "ParameterKey": "MyVPC",
+    "ParameterKey": "VPCId",
     "ParameterValue": "{Your-VPC}",
     "UsePreviousValue": false
   },
   {
-    "ParameterKey": "MySubnet",
+    "ParameterKey": "Ec2Subnet",
     "ParameterValue": "{Your-subnet}",
     "UsePreviousValue": false
   },
   {
-    "ParameterKey": "MyALBSubnetSubnet1",
+    "ParameterKey": "ALBSubnetSubnet1",
     "ParameterValue": "{Your-subnet}",
     "UsePreviousValue": false
   },
   {
-    "ParameterKey": "MyALBSubnetSubnet2",
+    "ParameterKey": "ALBSubnetSubnet2",
     "ParameterValue": "{Your-subnet}",
     "UsePreviousValue": false
   }
