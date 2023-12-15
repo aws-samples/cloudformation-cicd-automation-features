@@ -1,13 +1,12 @@
 [
-    {
-      "ParameterKey": "DynamoDBTableName",
-      "ParameterValue": "serverlessTabe",
-      "UsePreviousValue": false
-    },
-    {
-      "ParameterKey": "S3BucketName",
-      "ParameterValue": "{S3 Bucket you have created}",
-      "UsePreviousValue": false
-    }
-
-  ]
+  {
+    "ParameterKey": "DynamoDBTableName",
+    "ParameterValue": "{DynamoDB-table-name}",
+    "UsePreviousValue": false
+  },
+  {
+    "ParameterKey": "LambdaFunctionName",
+    "ParameterValue": "{lamnbda-function-name}",
+    "UsePreviousValue": false
+  }
+]

@@ -11,11 +11,11 @@ Parameters:
     AllowedValues: [t3.micro, t3.small, t3.medium]
     ConstraintDescription: must be a valid EC2 instance type. 
   
-  MyVPC: 
+  VPCId: 
     Description: VPC ID for Ec2 Instance and security group.
     Type: String
   
-  MySubnet: 
+  Ec2Subnet: 
     Description: Subnet in which the instance would be created.
     Type: String
 
@@ -49,7 +49,7 @@ Resources:
       SecurityGroupIds: 
         - !Ref 'InstanceSecurityGroups'
       ImageId: 'ami-1234'
-      SubnetId: !Ref MySubnet 
+      SubnetId: !Ref Ec2Subnet 
 
   InstanceSecurityGroups:
     Type: AWS::EC2::SecurityGroup
@@ -57,7 +57,7 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       GroupDescription: Allows incoming traffic on port 80 and outgoing traffic on port 443. 
-      VpcId: !Ref MyVPC  # Specify the VPC ID for the security group
+      VpcId: !Ref VPCId  # Specify the VPC ID for the security group
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
