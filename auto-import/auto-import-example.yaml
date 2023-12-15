@@ -5,7 +5,11 @@ Parameters:
   DynamoDBTableName:
     Type: String
     Description: Name of the DynamoDB table
-
+    
+  LambdaFunctionName:
+    Type: String
+    Description: Name of the DynamoDB table
+    
 Resources:
   DynamoDBTable:
     Type: 'AWS::DynamoDB::Table'
@@ -22,12 +26,13 @@ Resources:
         - AttributeName: PK
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
-
+      
   LambdaFunction:
     Type: 'AWS::Lambda::Function'
     DeletionPolicy: Retain
     UpdateReplacePolicy: Delete
     Properties:
+      FunctionName: !Ref LambdaFunctionName
       Handler: index.lambda_handler
       Role: !GetAtt [ LambdaExecutionRole, Arn ]
       Runtime: python3.8
@@ -48,7 +53,7 @@ Resources:
       Environment:
         Variables:
           DYNAMODB_TABLE: !Ref DynamoDBTableName
-
+     
   LambdaExecutionRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -66,12 +71,12 @@ Resources:
         - !Sub "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
         - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonDynamoDBFullAccess"
       
-
 Outputs: 
-  LambdaFunctionARN: 
-    Description: Lambda function's ARN
-    Value: !GetAtt LambdaFunction.Arn
-  
+
   DynamoDBTableARN: 
     Description: DynamoDB table's ARN
     Value: !GetAtt DynamoDBTable.Arn
+    
+  LambdaFunctionARN: 
+    Description: Lambda function's ARN
+    Value: !GetAtt LambdaFunction.Arn

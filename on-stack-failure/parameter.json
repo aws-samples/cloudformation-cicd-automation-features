@@ -15,12 +15,12 @@
     "UsePreviousValue": false
   },
   {
-    "ParameterKey": "MyVPC",
+    "ParameterKey": "VPCId",
     "ParameterValue": "{Your-VPC}",
     "UsePreviousValue": false
   },
   {
-    "ParameterKey": "MySubnet",
+    "ParameterKey": "Ec2Subnet",
     "ParameterValue": "{Your-Subnet}",
     "UsePreviousValue": false
   }
