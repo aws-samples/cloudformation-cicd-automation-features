@@ -12,10 +12,10 @@ phases:
         stack_exists=$(aws cloudformation describe-stacks --stack-name ${STACK_NAME})
         if [ -z "$stack_exists" ]; then
           echo "Stack does not exist, creating change set with type Create"
-          aws cloudformation create-change-set --stack-name ${STACK_NAME} --change-set-type CREATE --template-body file://auto-import-example.yaml --role-arn ${ROLE_ARN} --change-set-name my-change-set --parameters file://parameter.json --capabilities CAPABILITY_NAMED_IAM --import-existing-resources
+          aws cloudformation create-change-set --stack-name ${STACK_NAME} --change-set-type CREATE --template-body file://test-import-existing-resource.yaml --role-arn ${ROLE_ARN} --change-set-name my-change-set --parameters file://parameter.json --capabilities CAPABILITY_NAMED_IAM --import-existing-resources
         else
           echo "Stack does exists, creating change set with type Update"
-          aws cloudformation create-change-set --stack-name ${STACK_NAME} --change-set-type UPDATE --template-body file://auto-import-example.yaml --role-arn ${ROLE_ARN} --change-set-name my-change-set --parameters file://parameter.json --capabilities CAPABILITY_NAMED_IAM --import-existing-resources
+          aws cloudformation create-change-set --stack-name ${STACK_NAME} --change-set-type UPDATE --template-body file://test-import-existing-resource.yaml --role-arn ${ROLE_ARN} --change-set-name my-change-set --parameters file://parameter.json --capabilities CAPABILITY_NAMED_IAM --import-existing-resources
         fi
       - aws cloudformation describe-change-set --stack-name ${STACK_NAME} --change-set-name ${CHANGE_SET_NAME}
       - |

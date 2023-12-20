@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This CloudFormation template is used to display the auto-import feature of CloudFormation.
+Description: This CloudFormation template is used to display the import-existing-resource feature of CloudFormation.
 
 Parameters:
   DynamoDBTableName:
