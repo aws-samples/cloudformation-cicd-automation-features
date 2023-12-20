@@ -1,0 +1,17 @@
+[
+  {
+    "ParameterKey": "DynamoDBTableName",
+    "ParameterValue": "{DynamoDB-table-name}",
+    "UsePreviousValue": false
+  },
+  {
+    "ParameterKey": "LambdaFunctionName",
+    "ParameterValue": "{lamnbda-function-name}",
+    "UsePreviousValue": false
+  },
+  {
+    "ParameterKey": "S3BucketName",
+    "ParameterValue": "{s3-bucket-name}",
+    "UsePreviousValue": false
+  }
+]

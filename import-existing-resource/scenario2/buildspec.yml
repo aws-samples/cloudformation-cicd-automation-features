@@ -1,0 +1,44 @@
+version: 0.2
+env:
+  variables:
+    STACK_NAME: 'auto-import-test'
+    CHANGE_SET_NAME: 'my-change-set'
+    ROLE_ARN: '{Your-CloudFormation-Role}'
+
+phases:
+  build:
+    commands:
+      - |
+        stack_exists=$(aws cloudformation describe-stacks --stack-name ${STACK_NAME})
+        if [ -z "$stack_exists" ]; then
+          echo "Stack does not exist, creating change set with type Create"
+          aws cloudformation create-change-set --stack-name ${STACK_NAME} --change-set-type CREATE --template-body file://test-import-existing-resource.yaml --role-arn ${ROLE_ARN} --change-set-name my-change-set --parameters file://parameter.json --capabilities CAPABILITY_NAMED_IAM --import-existing-resources
+        else
+          echo "Stack does exists, creating change set with type Update"
+          aws cloudformation create-change-set --stack-name ${STACK_NAME} --change-set-type UPDATE --template-body file://test-import-existing-resource.yaml --role-arn ${ROLE_ARN} --change-set-name my-change-set --parameters file://parameter.json --capabilities CAPABILITY_NAMED_IAM --import-existing-resources
+        fi
+      - aws cloudformation describe-change-set --stack-name ${STACK_NAME} --change-set-name ${CHANGE_SET_NAME}
+      - |
+        if [ $? -eq 0 ]; then
+          echo "Change set exists, waiting for it to be in state 'Create'"
+          while true; do
+            change_set_status=$(aws cloudformation describe-change-set --stack-name ${STACK_NAME} --change-set-name ${CHANGE_SET_NAME} | jq -r '.Status')
+            if [ "$change_set_status" = "CREATE_COMPLETE" ]; then
+              echo "Change set is in state 'Create Complete', executing"
+              aws cloudformation execute-change-set --stack-name ${STACK_NAME} --change-set-name ${CHANGE_SET_NAME}
+              break
+            elif [ "$change_set_status" = "FAILED" ]; then
+              echo "Change set creation failed, exiting"
+              exit 1
+            else
+              echo "Change set is still creating, waiting..."
+              sleep 10
+            fi
+          done
+        else
+          echo "Change set does not exist, skipping"
+        fi
+
+
+
+       
